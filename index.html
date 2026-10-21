@@ -3,86 +3,326 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Easy Travel - التنقل الذكي في المغرب</title>
-    <!-- Tailwind CSS CDN للسرعة والخفة -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Easy Travel - السفر والنقل بسهولة</title>
     <style>
-        body { font-family: 'Cairo', sans-serif; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f7f9fc;
+            margin: 0;
+            padding: 0;
+        }
+        /* Intro Video Section */
+        #intro-section {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0f172a;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            color: white;
+            transition: opacity 0.5s ease;
+        }
+        #intro-section video {
+            width: 80%;
+            max-width: 600px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            margin-bottom: 20px;
+        }
+        .skip-btn {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            font-size: 16px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .skip-btn:hover {
+            background: #059669;
+        }
+
+        /* Main App Header */
+        .header {
+            background: #1e293b;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .admin-btn {
+            background-color: #f59e0b;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* Services Grid (InDrive Style) */
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .service-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: transform 0.2s, border 0.2s;
+            border: 2px solid transparent;
+        }
+        .service-card:hover, .service-card.active {
+            transform: translateY(-3px);
+            border-color: #10b981;
+        }
+        .service-card h3 {
+            margin: 10px 0 0;
+            color: #334155;
+            font-size: 18px;
+        }
+        .service-icon {
+            font-size: 35px;
+        }
+
+        /* Drivers List */
+        .drivers-section {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        .driver-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .driver-item:last-child {
+            border-bottom: none;
+        }
+        .admin-panel {
+            display: none;
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .delete-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body>
 
-    <!-- Header / Navbar -->
-    <header class="bg-white shadow-sm sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="flex items-center space-x-2 space-x-reverse">
-                <!-- Logo Mockup -->
-                <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
-                    <span class="text-green-400">🚗</span>
-                </div>
-                <span class="text-xl font-bold text-blue-900">Easy <span class="text-green-600">Travel</span></span>
+    <!-- الفيديو التحفيزي في البداية -->
+    <div id="intro-section">
+        <h2 style="margin-bottom: 15px;">مرحباً بكم في Easy Travel 🚀</h2>
+        <!-- يمكنك تغيير رابط الفيديو برابط فيديو تحفيزي جاهز -->
+        <video id="introVideo" autoplay muted playsinline>
+            <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+            متصفحك لا يدعم عرض الفيديو.
+        </video>
+        <button class="skip-btn" onclick="closeIntro()">تخطّي والدخول للتطبيق</button>
+    </div>
+
+    <div class="header">
+        <h2>Easy Travel 🚗</h2>
+        <button id="adminToggleBtn" class="admin-btn" onclick="toggleAdminMode()">دخول المدير</button>
+    </div>
+
+    <div class="container">
+        <!-- لوحة التحكم للمدير -->
+        <div id="adminPanel" class="admin-panel">
+            <h3>لوحة تحكم المدير (Admin)</h3>
+            <p style="color: #047857; font-weight: bold;">أنت الآن في وضع المدير لإضافة السائقين والخدمات.</p>
+            <button style="background: #10b981; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer;" onclick="addDriver()">+ إضافة سائق جديد</button>
+            <button style="background: #64748b; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin-right: 10px;" onclick="logoutAdmin()">خروج</button>
+        </div>
+
+        <!-- اختيار الخدمات (على طريقة InDrive) -->
+        <h3 style="color: #1e293b;">اختر نوع الخدمة:</h3>
+        <div class="services-grid">
+            <div class="service-card active" onclick="filterService('الكل', this)">
+                <div class="service-icon">🌐</div>
+                <h3>الكل</h3>
             </div>
-            <nav class="hidden md:flex space-x-6 space-x-reverse text-sm font-medium">
-                <a href="#" class="text-blue-600 hover:text-blue-800">الرئيسية</a>
-                <a href="#tracking" class="hover:text-blue-600">تتبع الرحلة</a>
-                <a href="#drivers" class="hover:text-blue-600">السائقين</a>
-                <a href="#support" class="hover:text-blue-600">الشكايات والدعم</a>
-            </nav>
-            <div>
-                <a href="#book" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow">احجز الآن</a>
+            <div class="service-card" onclick="filterService('Taxi', this)">
+                <div class="service-icon">🚕</div>
+                <h3>طاكسي / سيارة</h3>
+            </div>
+            <div class="service-card" onclick="filterService('Motor', this)">
+                <div class="service-icon">🏍️</div>
+                <h3>موتور (دراجة)</h3>
+            </div>
+            <div class="service-card" onclick="filterService('Chahina', this)">
+                <div class="service-icon">🚚</div>
+                <h3>شاحنة نقل</h3>
             </div>
         </div>
-    </header>
 
-    <!-- Hero Section -->
-    <section class="bg-gradient-to-r from-blue-900 to-blue-700 text-white py-16 px-4 text-center">
-        <div class="max-w-3xl mx-auto">
-            <h1 class="text-3xl md:text-5xl font-bold mb-4">تنقل بكل أمان وسلاسة في جميع مدن المغرب</h1>
-            <p class="text-blue-100 mb-8 text-sm md:text-base">خدمة نقل داخلية متطورة، تتبع حي، ودفع آمن عبر Wafacash وبطاقات الائتمان.</p>
-            
-            <!-- Quick Booking Box -->
-            <div id="book" class="bg-white p-4 rounded-xl shadow-lg text-gray-800 text-right">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label class="block text-xs font-bold text-gray-600 mb-1">من (نقطة الانطلاق)</label>
-                        <input type="text" placeholder="مثال: سلا، الرباط..." class="w-full p-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500">
+        <!-- لائحة السائقين والمركبات المتاحة -->
+        <div class="drivers-section">
+            <h3 style="margin-top: 0; color: #1e293b;">السائقون المتاحون قربك:</h3>
+            <div id="driversList">
+                <!-- يتم تعبئتها تلقائياً -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // إغلاق فيديو المقدمة
+        function closeIntro() {
+            let intro = document.getElementById("intro-section");
+            intro.style.opacity = "0";
+            setTimeout(() => {
+                intro.style.display = "none";
+            }, 500);
+        }
+
+        // إغلاق الفيديو تلقائياً بعد انتهائه
+        document.getElementById("introVideo").onended = function() {
+            closeIntro();
+        };
+
+        // إدارة وضع المدير
+        let isAdmin = localStorage.getItem("isAdmin") === "true";
+
+        window.onload = function() {
+            if (isAdmin) {
+                showAdminUI();
+            }
+            loadDrivers('الكل');
+        };
+
+        function toggleAdminMode() {
+            if (!isAdmin) {
+                let password = prompt("أدخل كلمة سر المدير (افتراضي: 1234):");
+                if (password === "1234") {
+                    isAdmin = true;
+                    localStorage.setItem("isAdmin", "true");
+                    showAdminUI();
+                    loadDrivers('الكل');
+                    alert("مرحباً بك أيها المدير!");
+                } else if (password !== null) {
+                    alert("كلمة السر خاطئة!");
+                }
+            }
+        }
+
+        function showAdminUI() {
+            document.getElementById("adminPanel").style.display = "block";
+            document.getElementById("adminToggleBtn").style.display = "none";
+        }
+
+        function logoutAdmin() {
+            isAdmin = false;
+            localStorage.setItem("isAdmin", "false");
+            document.getElementById("adminPanel").style.display = "none";
+            document.getElementById("adminToggleBtn").style.display = "block";
+            loadDrivers('الكل');
+        }
+
+        // قاعدة بيانات السائقين والخدمات المحلية
+        function getDrivers() {
+            let drivers = localStorage.getItem("easy_drivers");
+            if (drivers) {
+                return JSON.parse(drivers);
+            } else {
+                return [
+                    { name: "يوسف الراضي", type: "Taxi", details: "مرسيدس - رقم: 12 الفحص" },
+                    { name: "حمزة التجاني", type: "Motor", details: "سكوتر سريع لتوصيل الأغراض" },
+                    { name: "إبراهيم الكباص", type: "Chahina", details: "شاحنة صغيرة لنقل الأثاث والبضائع" }
+                ];
+            }
+        }
+
+        function loadDrivers(category) {
+            let drivers = getDrivers();
+            let list = document.getElementById("driversList");
+            list.innerHTML = "";
+
+            let filtered = category === 'الكل' ? drivers : drivers.filter(d => d.type === category);
+
+            if (filtered.length === 0) {
+                list.innerHTML = "<p style='color: #64748b; text-align: center;'>لا توجد خدمات متاحة في هذه الفئة حالياً.</p>";
+                return;
+            }
+
+            filtered.forEach((driver, index) => {
+                let originalIndex = drivers.findIndex(d => d === driver);
+                let deleteBtn = isAdmin ? `<button class="delete-btn" onclick="deleteDriver(${originalIndex})">حذف</button>` : '';
+                
+                let icon = driver.type === 'Taxi' ? '🚕' : driver.type === 'Motor' ? '🏍️' : '🚚';
+
+                list.innerHTML += `
+                    <div class="driver-item">
+                        <div>
+                            <h4 style="margin: 0 0 5px; color: #334155;">${icon} ${driver.name}</h4>
+                            <p style="margin: 0; color: #64748b; font-size: 14px;">${driver.details}</p>
+                        </div>
+                        ${deleteBtn}
                     </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-600 mb-1">إلى (الوجهة)</label>
-                        <input type="text" placeholder="أدخل وجهتك..." class="w-full p-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500">
-                    </div>
-                </div>
-                <button class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-bold text-sm transition">ابحث عن سائق الآن</button>
-            </div>
-        </div>
-    </section>
+                `;
+            });
+        }
 
-    <!-- Features Section -->
-    <section class="py-12 px-4 max-w-7xl mx-auto">
-        <h2 class="text-2xl font-bold text-center mb-8 text-blue-900">لماذا اختيار Easy Travel؟</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="bg-white p-6 rounded-xl shadow-sm border text-center">
-                <div class="text-3xl mb-3">📍</div>
-                <h3 class="font-bold text-lg mb-2">تتبع مباشر</h3>
-                <p class="text-sm text-gray-600">تتبع رحلتك خطوة بخطوة من نقطة الانطلاق حتى الوصول بأمان تام.</p>
-            </div>
-            <div class="bg-white p-6 rounded-xl shadow-sm border text-center">
-                <div class="text-3xl mb-3">💳</div>
-                <p class="text-sm text-gray-600">دفع مرن وآمن عبر Wafacash، CashPlus أو بطاقات الائتمان البنكية.</p>
-                <h3 class="font-bold text-lg mb-2">طرق دفع متعددة</h3>
-            </div>
-            <div class="bg-white p-6 rounded-xl shadow-sm border text-center">
-                <div class="text-3xl mb-3">🎁</div>
-                <h3 class="font-bold text-lg mb-2">مكافآت للسائقين</h3>
-                <p class="text-sm text-gray-600">بونص 100 درهم لكل سائق يكمل 30 رحلة بنجاح مع خدمة متميزة.</p>
-            </div>
-        </div>
-    </section>
+        function filterService(category, element) {
+            document.querySelectorAll('.service-card').forEach(card => card.classList.remove('active'));
+            element.classList.add('active');
+            loadDrivers(category);
+        }
 
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-gray-400 py-6 text-center text-xs">
-        <p>&copy; 2026 Easy Travel Morocco. جميع الحقوق محفوظة.</p>
-    </footer>
+        function addDriver() {
+            let name = prompt("أدخل اسم السائق:");
+            let typeInput = prompt("اختر نوع الخدمة:\n1. اكتب Taxi للسيارات/الطاكسي\n2. اكتب Motor للدراجات\n3. اكتب Chahina للشاحنات");
+            let details = prompt("أدخل تفاصيل المركبة ورقم اللوحة:");
 
+            if (name && typeInput && details) {
+                let type = "Taxi";
+                if (typeInput.toLowerCase().includes('motor') || typeInput.includes('موتور')) type = "Motor";
+                if (typeInput.toLowerCase().includes('chahina') || typeInput.includes('شاحنة')) type = "Chahina";
+
+                let drivers = getDrivers();
+                drivers.push({ name: name, type: type, details: details });
+                localStorage.setItem("easy_drivers", JSON.stringify(drivers));
+                loadDrivers('الكل');
+            }
+        }
+
+        function deleteDriver(index) {
+            if (confirm("هل تريدจริงๆ حذف هذا السائق؟")) {
+                let drivers = getDrivers();
+                drivers.splice(index, 1);
+                localStorage.setItem("easy_drivers", JSON.stringify(drivers));
+                loadDrivers('الكل');
+            }
+        }
+    </script>
 </body>
 </html>
